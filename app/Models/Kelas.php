@@ -9,4 +9,7 @@ class Kelas  extends Model
 {
     use HasFactory;
     protected $fillable = ['nama'];
+    public function Kelas(){
+        return $this->hasMany(Student::class);
+}
 }

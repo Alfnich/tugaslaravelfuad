@@ -2,7 +2,7 @@
 
 @section('content')
   <h1>{{ $title }}</h1>
-  <a href="/kelas/create" class="btn btn-primary mb-3">ADD data</a>
+  <!-- <a href="/kelas/create" class="btn btn-primary mb-3">ADD data</a> -->
   @if(session('success'))
     <div class="alert alert-success" role="alert">
       {{ session('success') }}
@@ -11,13 +11,13 @@
 
   @if(count($kelas) > 0)
     <h2>Existing Items</h2>
+    <div class="container-fluid">
     <table class="table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Nama</th>
           <th>Timestamp</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -26,19 +26,11 @@
             <td>{{ $item->id }}</td>
             <td>{{ $item->nama }}</td>
             <td>{{ $item->created_at }}</td>
-            <td>
-            <a href="/kelas/edit/{{ $item->id }}" class="btn btn-primary">Edit</a>
-            <a href="{{ route('kelas.detail', ['id' => $item->id]) }}" class="btn btn-info">Detail</a>
-                <form method="post" action="/kelas/destroy/{{ $item->id }}" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-              </form>
-            </td>
           </tr>
         @endforeach
       </tbody>
     </table>
+    </div>
   @else
     <p>No items found.</p>
   @endif

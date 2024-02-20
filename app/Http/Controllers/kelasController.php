@@ -1,81 +1,87 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\kelas;
 use Illuminate\Http\Request;
-use App\Models\Kelas;
 
-class KelasController extends Controller
+class kelasController extends Controller
 {
-    public function index()
-    {
-        $kelas = Kelas::all();
-        return view('kelas.all', ['title' => 'Kelas', 'kelas' => $kelas]);
-    }
 
-    public function create()
+  public function index2() 
+  {
+   
+       return view('/dashboard/kelas', [
+           "title" => "kelas",
+           "kelas" => kelas::all()
+       ]);
+   
+ }
+    public function index() 
     {
-        return view('kelas.create', ['title' => 'Add New Kelas']);
-    }
+     
+         return view('/kelas/all', [
+             "title" => "kelas",
+             "kelas" => kelas::all()
+         ]);
+     
+   }
 
-    public function store(Request $request)
-    {
-        $validateData = $request->validate([
-            'nama' => 'required|max:255',
+   public function create(kelas $class) 
+   {
+    
+        return view('./dashboard/tambahkelas', [
+            "title" => "AddData-Kelas",
+            "kelas" => $class
         ]);
+    
+  }
 
-        Kelas::create($validateData);
+  public function store(Request $request)
+{
+  $validatedData = $request->validate([
+    'id' => 'AUTO INCREMENT',
+    'nama' => 'required|max:225',
+]);
 
-        return redirect('/kelas')->with('success', 'Kelas added successfully');
-    }
+$result = kelas::create($validatedData);
 
-    public function destroy($id)
-    {
-        $kelas = Kelas::destroy($id);
+if ($result) {
+    return redirect('/dashboard/kelas')->with('success', 'Data siswa berhasil ditambahkan');
+} 
 
-        if (!$kelas) {
-            return redirect('/kelas')->with('error', 'Kelas not found');
-        }
+  }
 
-        return redirect('/kelas')->with('success', 'Kelas deleted successfully');
-    }
 
-    public function edit($id)
-    {
-        $kelas = Kelas::find($id);
+  public function destroy(kelas $kelas)
+  {
+      $result = $kelas->delete();
+  
+      if ($result) {
+          return redirect('/class/kelas')->with('success', 'Data siswa berhasil dihapus');
+      }
+  }
 
-        if (!$kelas) {
-            return redirect('/kelas')->with('error', 'Kelas not found');
-        }
+  
+  public function edit(kelas $kelas) 
+  {
+    return view('dashboard.edit', [
+      "title" => "edit-kelas",
+      "kelas" => $kelas
+    ]);
+}
 
-        return view('kelas.edit', ['title' => 'Edit Kelas', 'kelas' => $kelas]);
-    }
+public function update(Request $request, kelas $kelas) {
 
-    public function update(Request $request, $id)
-    {
-        $validateData = $request->validate([
-            'nama' => 'required|max:255',
-        ]);
-
-        $kelas = Kelas::find($id);
-
-        if (!$kelas) {
-            return redirect('/kelas')->with('error', 'Kelas not found');
-        }
-
-        $kelas->update($validateData);
-
-        return redirect('/kelas')->with('success', 'Kelas updated successfully');
-    }
-
-    public function detail($id)
-    {
-        $kelas = Kelas::find($id);
-
-        if (!$kelas) {
-            return redirect('/kelas')->with('error', 'Kelas not found');
-        }
-
-        return view('kelas.detail', ['title' => 'Kelas Detail', 'kelas' => $kelas]);
-    }
+    $validatedData = $request->validate([
+      'nama' => 'required|max:225',
+  ]);
+  
+  $result = kelas::where('id', $kelas->id)->update($validatedData);
+  
+  if ($result) {
+      return redirect('/dashboard/kelas')->with('success', 'Data siswa berhasil diubah');
+  }
+  
+  }
+  
 }

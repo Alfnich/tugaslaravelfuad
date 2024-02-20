@@ -1,91 +1,106 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Kelas;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Http\Request;
 
 class StudentsController extends Controller
 {
-    public static function index(){
-        return view('student/all', [
-            "title" => "student",
-            "students" => Student::all()
-        ]);
-    }
 
-    public function show($student){
-        return view('student.detail',[
-            "title" => "detail.student",
-            "student" => Student::find($student)
-        ]);
-    }
+  public function index2()
+  {
 
-    public function create(){
-        return view('student.create',[
-            "title" => "New Data Student",
-            "grade" => student::all()
-        ]);
-    }
-
-    public function store(Request $request){
-        $validateData = $request->validate([
-            'nis' => 'required|max:255',
-            'nama' => 'required|max:255',
-            'kelas' => 'required',
-            'tanggal_lahir' => 'required',
-            'alamat' => 'required'
-        ]);
-        Student::create($validateData);
-        return redirect('/student/all')-> with('success', 'Data siswa berhasil di tambahkan');
-        
-    }
-
-    public function destroy($student)
-    {
-        $student = Student::destroy($student);
-
-        if (!$student) {
-            return redirect('/student/all')->with('error', 'Student not found');
-        }
-
-        return redirect('/student/all')->with('success', 'Student deleted successfully');
-    }
-
-    public function edit($studentId)
-    {
-        $student = Student::find($studentId);
-
-        if (!$student) {
-            return redirect('/student/all')->with('error', 'Student not found');
-        }
-
-        return view('student.edit', [
-            'title' => 'Edit Student',
-            'student' => $student,
-        ]);
-    }
-
-    public function update(Request $request, $studentId)
-    {
-        $validateData = $request->validate([
-            'nis' => 'required|max:255',
-            'nama' => 'required|max:255',
-            'kelas' => 'required',
-            'tanggal_lahir' => 'required',
-            'alamat' => 'required'
-        ]);
-
-        $student = Student::find($studentId);
-
-        if (!$student) {
-            return redirect('/student/all')->with('error', 'Student not found');
-        }
-
-        $student->update($validateData);
-
-        return redirect('/student/all')->with('success', 'Student updated successfully');
-    }
+    $students = Student::latest();
+    $students = Student::latest()->paginate(10);
+    return view('./dashboard/dashboard', [
+    "title" => "student",
+    "students" => $students,
+]);
+  }
+  public function index()
+  {
+    $students = Student::latest()->paginate(10);
+    return view('./student/all', [
+    "title" => "student",
+    "students" => $students,
+]);
+  }
+  
+  public function show($student){
+    return view('student.detail',[
+        "title" => "detail.student",
+        "student" => Student::find($student)
+    ]);
+}
 
 
+
+  public function edit(Student $student)
+  {
+    return view('student.edit', [
+      "title" => "detail-students",
+      "student" => $student,
+      "grades" => kelas::all(),
+    ]);
+}
+
+public function update(Request $request, Student $student) {
+
+  $validatedData = $request->validate([
+    'id' => 'AUTO INCREMENT',
+    'nis' => 'required|max:225',
+    'nama' => 'required|max:225',
+    'kelas_id' => 'required',
+    'tgl_lahir' => 'required',
+    'alamat' => 'required',
+]);
+
+$result = Student::where('id', $student->id)->update($validatedData);
+
+if ($result) {
+    return redirect('/dashboard/dashboard')->with('success', 'Data siswa berhasil diubah');
+}
+
+}
+
+public function create(Student $student)
+  {
+    return view('dashboard.tambah', [
+      "title" => "AddData-students",
+      "grades" => kelas::all()
+    ]);
+}
+
+
+
+public function store(Request $request)
+{
+  $validatedData = $request->validate([
+    // 'id' => 'AUTO INCREMENT',
+    'nis' => 'required|max:225',
+    'nama' => 'required|max:225',
+    'kelas_id' => 'required',
+    'tanggal_lahir' => 'required',
+    'alamat' => 'required',
+]);
+
+
+$result = Student::create($validatedData);
+
+if ($result) {
+    return redirect('/dashboard/dashboard')->with('success', 'Data siswa berhasil ditambahkan');
+}
+}
+
+  public function destroy(Student $student)
+  {
+      $result = Student::destroy($student->id);
+
+      if ($result) {
+        return redirect('/dashboard/dashboard')->with('success', 'Data siswa berhasil dihapus');
+      }
+  }
+  
 }

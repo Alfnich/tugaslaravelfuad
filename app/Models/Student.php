@@ -8,13 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     use HasFactory;
-
-    public function student()
-    {
-        return $this->hasMany(student::class);
-    }
-
     protected $guarded = ['id'];
 
-    protected $fillable = ['nis', 'nama', 'kelas', 'tanggal_lahir', 'alamat'];
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class,"kelas_id");
+    }
+    public function scopeFilter($query, array $filters)
+{
+    if (isset($filters['search']) ? $filters['search'] : false) {
+       return $query->where('name', 'like', '%'. $filters['search'] . '%')
+              ->Orwhere('alamat', 'like', '%'. $filters['search'] . '%');
+      }
+}
 }

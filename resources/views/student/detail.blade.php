@@ -17,9 +17,9 @@
         </div>
         <div class="form-group">
             <label for="">Class</label>
-            <input type="text" class="form-control" name="kelas" id="kelas" value="{{ $student->kelas }}" disabled>
+            <input type="text" class="form-control" name="kelas" id="kelas" value="{{ $student->kelas_id }}" disabled>
         </div>
-        <div class="text-center"> 
+        <div class="mt-2 d-flex justify-content-center"> 
         <a href="/student/all" class="btn btn-primary btn-lg">Back</a>
     </div>
     </div>

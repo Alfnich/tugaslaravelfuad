@@ -13,9 +13,8 @@
     </div>
   @endif
 
-  <form method="POST" action="/kelas/update/{{ $kelas->id }}">
+  <form method="post" action="/dashboard/updateKelas/{{ $kelas->id }}">
     @csrf
-    @method('PATCH')
 
     <div class="mb-3">
       <label for="nama" class="form-label">Nama</label>

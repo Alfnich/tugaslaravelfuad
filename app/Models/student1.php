@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Students 
+class Students
 {
    private static $student = [
     [
         "id" => 1,
         "nis" => 201,
-        "nama" => "Arya",
-        "kelas" => "11 PPLG 5",
+        "nama" => "Fuad",
+        "kelas" => "11 PPLG 1",
         "alamat" => "Kudus",
     ],
 
